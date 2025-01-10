@@ -5,106 +5,29 @@
 {% block body %}
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    .form-container { margin-top: 20px; }
-    .form-container label { display: block; margin-bottom: 5px; }
-    .form-container select, .form-container button { width: 100%; padding: 10px; margin-bottom: 10px; }
 </style>
 
 <div class="example-wrapper">
     <h1>{{ message }}</h1>
 
     {% if data is not null %}
-        <!-- Affichage du tableau avec jSpreadsheet -->
         <div id="spreadsheet"></div>
 
-        <script src="https://cdn.jsdelivr.net/npm/jspreadsheet/dist/jspreadsheet.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet/dist/jspreadsheet.css" />
-        <script>
-            var data = {{ data|json_encode()|raw }};
-            jSpreadsheet("#spreadsheet", {
-                data: data,
-                columns: [
-                    {% for header in data[0] %}
-                        { title: "{{ header }}", type: 'text' },
-                    {% endfor %}
-                ],
-                editable: true
+        <script type="text/javascript">
+            // Convertir les données JSON passées par le contrôleur
+            var data = {{ data | raw }};
+            
+            // Initialiser jspreadsheet avec les données
+            jspreadsheet(document.getElementById('spreadsheet'), {
+                data: data,        // Charger les données
+                columns: data[0],  // Les premières lignes comme en-têtes de colonnes
+                minDimensions: [10, 10],  // Taille minimale de la grille
+                allowInsertColumn: false, // Désactiver l'insertion de colonnes
+                allowInsertRow: false,    // Désactiver l'insertion de lignes
+                allowDeleteColumn: false, // Désactiver la suppression de colonnes
+                allowDeleteRow: false,    // Désactiver la suppression de lignes
             });
         </script>
-
-        <!-- Formulaire pour mapper les colonnes -->
-        <div class="form-container">
-            <h3>Mappez les colonnes aux champs</h3>
-
-            <form action="{{ path('affichage') }}" method="post">
-                <label for="raison_social">Raison Sociale</label>
-                <select name="raison_social" id="raison_social" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="civilite_nom_prenom">Civilité, Nom, Prénom</label>
-                <select name="civilite_nom_prenom" id="civilite_nom_prenom" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="adresse_1">Adresse 1</label>
-                <select name="adresse_1" id="adresse_1" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="adresse_2">Adresse 2</label>
-                <select name="adresse_2" id="adresse_2" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="adresse_3">Adresse 3</label>
-                <select name="adresse_3" id="adresse_3" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="code_postal">Code Postal</label>
-                <select name="code_postal" id="code_postal" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="ville">Ville</label>
-                <select name="ville" id="ville" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="pays">Pays</label>
-                <select name="pays" id="pays" required>
-                    <option value="">Sélectionner une colonne</option>
-                    {% for header in data[0] %}
-                        <option value="{{ loop.index0 }}">{{ header }}</option>
-                    {% endfor %}
-                </select>
-
-                <button type="submit">Valider le mappage</button>
-            </form>
-        </div>
     {% endif %}
 </div>
 

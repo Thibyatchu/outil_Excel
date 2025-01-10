@@ -37,7 +37,7 @@ class AffichageController extends AbstractController
         // Passer les données à la vue
         return $this->render('affichage/index.html.twig', [
             'message' => $message,
-            'data' => $data,
+            'data' => json_encode($data),  // Convertir les données en JSON
         ]);
     }
 }
