@@ -16,14 +16,19 @@ class AffichageController extends AbstractController
         $session = $request->getSession();
         $data = $session->get('spreadsheet_data', []);
 
-        // Récupérer la valeur du checkbox "ignorer les premières lignes"
-        $ignoreFirstRows = $request->get('ignore_first_rows', 'no') === 'yes';
+        // Récupérer la valeur de l'option d'ignorance des lignes
+        $ignoreFirstRows = $request->get('ignore_first_rows', 'none');
 
-        // Calculer quelles lignes afficher en fonction du choix de l'utilisateur
-        if ($ignoreFirstRows) {
-            $data = array_slice($data, 2, 5); // Ignorer les deux premières lignes et afficher les 5 suivantes
+        // Si l'utilisateur souhaite ignorer des lignes
+        if ($ignoreFirstRows === 'one') {
+            // Ignorer la première ligne
+            $data = array_slice($data, 1, 10); // Ignore la première ligne, et affiche les 5 suivantes
+        } elseif ($ignoreFirstRows === 'two') {
+            // Ignorer les deux premières lignes
+            $data = array_slice($data, 2, 10); // Ignore les deux premières lignes et affiche les 5 suivantes
         } else {
-            $data = array_slice($data, 0, 5); // Afficher les 5 premières lignes
+            // Sinon, afficher les 5 premières lignes
+            $data = array_slice($data, 0, 10);
         }
 
         // Trouver le nombre de colonnes maximum
@@ -34,16 +39,24 @@ class AffichageController extends AbstractController
             $row = array_pad($row, $maxColumns, '');
         }
 
-        // Préparer les options pour les listes déroulantes
-        $columnNames = [];
-        foreach (range(1, $maxColumns) as $i) {
-            $columnNames[] = "Colonne $i";
+        // Générer les lettres des colonnes dynamiquement (A, B, C, ..., Z, AA, AB, ...)
+        $colLetters = [];
+        for ($i = 0; $i < $maxColumns; $i++) {
+            if ($i < 26) {
+                // A à Z
+                $colLetters[] = chr(65 + $i); // De A à Z
+            } else {
+                // AA, AB, etc.
+                $firstLetter = chr(65 + floor($i / 26) - 1); // Lettre de la première partie (A, B, C,...)
+                $secondLetter = chr(65 + ($i % 26)); // Lettre de la deuxième partie (A, B, C,...)
+                $colLetters[] = $firstLetter . $secondLetter; // Combine les deux parties pour les lettres AA, AB, ...
+            }
         }
 
         return $this->render('affichage/index.html.twig', [
             'data' => $data,
             'ignore_first_rows' => $ignoreFirstRows,
-            'columnNames' => $columnNames,
+            'colLetters' => $colLetters,  // On passe les lettres des colonnes à la vue
         ]);
     }
 }
