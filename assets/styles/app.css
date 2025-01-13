@@ -1,3 +1,87 @@
 body {
     background-color: skyblue;
 }
+
+/* CSS pour la page d'accueil */
+.form-container {
+    margin: 2em auto;
+    max-width: 800px;
+    width: 95%;
+    font: 18px/1.5 sans-serif;
+}
+
+.form-container label,
+.form-container button {
+    display: block;
+    margin: 10px 0;
+}
+
+.form-container button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #45a049;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
+
+/* CSS pour la page d'affichage */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2em 0;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+td {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) td {
+    background-color: #e9e9e9;
+}
+
+.radio-form {
+    margin: 1em 0;
+}
+
+.radio-form button {
+    margin-top: 10px;
+    padding: 5px 15px;
+    font-size: 14px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.radio-form button:hover {
+    background-color: #45a049;
+}
+
+.form-container select {
+    margin: 10px 0;
+    padding: 5px;
+    font-size: 14px;
+}

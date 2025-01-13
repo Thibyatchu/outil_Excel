@@ -1,0 +1,9 @@
+<div>
+    <label for="adresse2">Adresse 2 :</label>
+    <select name="adresse2" id="adresse2">
+        <option value="">Sélectionner</option>
+        {% for name in columnNames %}
+            <option value="{{ name }}">{{ name }}</option>
+        {% endfor %}
+    </select>
+</div>

@@ -8,7 +8,9 @@
         <script type="text/javascript" src="https://jspreadsheet.com/v4/jspreadsheet.js"></script>
         
         {% block stylesheets %}{% endblock %}
+            {{ encore_entry_link_tags('app') }}
         {% block javascripts %}{% endblock %}
+            {{ encore_entry_script_tags('app') }}
     </head>
 
     <body>

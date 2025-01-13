@@ -1,7 +1,5 @@
 <?php
 
-// src/Controller/AffichageController.php
-
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +19,11 @@ class AffichageController extends AbstractController
         // Récupérer la valeur du checkbox "ignorer les premières lignes"
         $ignoreFirstRows = $request->get('ignore_first_rows', 'no') === 'yes';
 
-        // Si l'utilisateur souhaite ignorer les deux premières lignes
+        // Calculer quelles lignes afficher en fonction du choix de l'utilisateur
         if ($ignoreFirstRows) {
-            // Ignorer 2 lignes : commencer à partir de la troisième ligne
-            $data = array_slice($data, 2, 5); // Ignore les deux premières lignes et affiche les 5 suivantes
+            $data = array_slice($data, 2, 5); // Ignorer les deux premières lignes et afficher les 5 suivantes
         } else {
-            // Sinon, afficher les 5 premières lignes
-            $data = array_slice($data, 0, 5);
+            $data = array_slice($data, 0, 5); // Afficher les 5 premières lignes
         }
 
         // Trouver le nombre de colonnes maximum
@@ -38,10 +34,16 @@ class AffichageController extends AbstractController
             $row = array_pad($row, $maxColumns, '');
         }
 
+        // Préparer les options pour les listes déroulantes
+        $columnNames = [];
+        foreach (range(1, $maxColumns) as $i) {
+            $columnNames[] = "Colonne $i";
+        }
+
         return $this->render('affichage/index.html.twig', [
             'data' => $data,
             'ignore_first_rows' => $ignoreFirstRows,
+            'columnNames' => $columnNames,
         ]);
     }
 }
-

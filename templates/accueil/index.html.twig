@@ -2,19 +2,11 @@
 
 {% block title %}Page d'Accueil{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+{% endblock %}
+
 {% block body %}
-<style>
-    .form-container { margin: 2em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .form-container label, .form-container button { display: block; margin: 10px 0; }
-    .form-container button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-    .form-container button:hover { background-color: #45a049; }
-
-    .error-message {
-        color: red;
-        font-weight: bold;
-    }
-</style>
-
 <div class="form-container">
     <h1>Bienvenue sur la page d'accueil</h1>
     
