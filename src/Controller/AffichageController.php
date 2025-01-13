@@ -1,12 +1,12 @@
 <?php
 
 // src/Controller/AffichageController.php
+
 namespace App\Controller;
 
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AffichageController extends AbstractController
@@ -14,30 +14,36 @@ class AffichageController extends AbstractController
     #[Route('/affichage', name: 'affichage')]
     public function index(Request $request): Response
     {
-        // Initialisation des variables
-        $message = 'Aucun fichier reçu';
-        $data = null;
+        // Récupérer les données de la session
+        $session = $request->getSession();
+        $data = $session->get('spreadsheet_data', []);
 
-        // Vérifier si un fichier a bien été envoyé
-        if ($request->isMethod('POST') && $request->files->get('file')) {
-            $file = $request->files->get('file');
+        // Récupérer la valeur du checkbox "ignorer les premières lignes"
+        $ignoreFirstRows = $request->get('ignore_first_rows', 'no') === 'yes';
 
-            try {
-                // Charger le fichier avec PhpSpreadsheet
-                $spreadsheet = IOFactory::load($file->getPathname());
-                $sheet = $spreadsheet->getActiveSheet();
-                $data = $sheet->toArray();  // Convertir les données du fichier en tableau PHP
-                $message = 'Fichier traité avec succès';
-            } catch (\Exception $e) {
-                // En cas d'erreur de traitement du fichier
-                $message = 'Erreur lors du traitement du fichier: ' . $e->getMessage();
-            }
+        // Si l'utilisateur souhaite ignorer la première ou les deux premières lignes
+        if ($ignoreFirstRows) {
+            // Vérifier combien de lignes ignorer : soit 1, soit 2
+            // Ignorer 1 ligne : commencer à partir de la deuxième ligne
+            // Ignorer 2 lignes : commencer à partir de la troisième ligne
+            $data = array_slice($data, 2, 5); // Ignore les deux premières lignes et affiche les 5 suivantes
+        } else {
+            // Sinon, afficher les 5 premières lignes
+            $data = array_slice($data, 0, 5);
         }
 
-        // Passer les données à la vue
+        // Trouver le nombre de colonnes maximum
+        $maxColumns = max(array_map('count', $data));
+
+        // Compléter les lignes manquantes de colonnes avec des chaînes vides
+        foreach ($data as &$row) {
+            $row = array_pad($row, $maxColumns, '');
+        }
+
         return $this->render('affichage/index.html.twig', [
-            'message' => $message,
-            'data' => json_encode($data),  // Convertir les données en JSON
+            'data' => $data,
+            'ignore_first_rows' => $ignoreFirstRows,
         ]);
     }
 }
+

@@ -1,34 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Display Page{% endblock %}
+{% block title %}Affichage des données{% endblock %}
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    table { width: 100%; border-collapse: collapse; margin: 2em 0; font-family: Arial, sans-serif; font-size: 16px; }
+    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: center; }
+    th { background-color: #4CAF50; color: white; }
+    td { background-color: #f2f2f2; }
+    tr:nth-child(even) td { background-color: #e9e9e9; }
 </style>
 
-<div class="example-wrapper">
-    <h1>{{ message }}</h1>
+<div class="container">
+    <h1>Affichage des données du fichier</h1>
 
-    {% if data is not null %}
-        <div id="spreadsheet"></div>
+    <p>Voici le contenu du fichier que vous avez importé :</p>
 
-        <script type="text/javascript">
-            // Convertir les données JSON passées par le contrôleur
-            var data = {{ data | raw }};
-            
-            // Initialiser jspreadsheet avec les données
-            jspreadsheet(document.getElementById('spreadsheet'), {
-                data: data,        // Charger les données
-                columns: data[0],  // Les premières lignes comme en-têtes de colonnes
-                minDimensions: [10, 10],  // Taille minimale de la grille
-                allowInsertColumn: false, // Désactiver l'insertion de colonnes
-                allowInsertRow: false,    // Désactiver l'insertion de lignes
-                allowDeleteColumn: false, // Désactiver la suppression de colonnes
-                allowDeleteRow: false,    // Désactiver la suppression de lignes
-            });
-        </script>
-    {% endif %}
+    <form action="{{ path('affichage') }}" method="get">
+        <label for="ignore_first_rows">Ignorer les premières lignes ?</label><br>
+        <input type="radio" id="ignore_first_rows_yes" name="ignore_first_rows" value="yes" {% if ignore_first_rows %} checked {% endif %}>
+        <label for="ignore_first_rows_yes">Oui (ignorer les 2 premières lignes)</label><br>
+        <input type="radio" id="ignore_first_rows_no" name="ignore_first_rows" value="no" {% if not ignore_first_rows %} checked {% endif %}>
+        <label for="ignore_first_rows_no">Non</label><br>
+        <button type="submit">Appliquer</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                {% for i in 0..data|first|length - 1 %}
+                    <th>Colonne {{ i + 1 }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>Vous pouvez revenir à la page d'accueil pour importer un autre fichier.</p>
 </div>
-
 {% endblock %}

@@ -13,14 +13,14 @@
 <div class="form-container">
     <h1>Bienvenue sur la page d'accueil</h1>
     
-    <p>Sur cette page, vous pouvez télécharger un fichier CSV ou Excel pour l'afficher sur la page suivante.</p>
+    <p>Sur cette page, vous pouvez importer un fichier CSV ou Excel pour l'afficher sur la page suivante.</p>
 
-    <form action="{{ path('affichage') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ path('accueil') }}" method="post" enctype="multipart/form-data">
         <label for="file">Choisir un fichier (CSV, XLS, XLSX) :</label>
         <input type="file" name="file" id="file" accept=".csv, .xls, .xlsx" required>
         <button type="submit">Envoyer le fichier</button>
     </form>
 
-    <p>Une fois le fichier téléchargé, vous serez redirigé vers la page d'affichage pour visualiser son contenu.</p>
+    <p>Une fois le fichier importé, vous serez redirigé vers la page d'affichage pour visualiser son contenu.</p>
 </div>
 {% endblock %}
