@@ -14,10 +14,21 @@ class AccueilController extends AbstractController
     #[Route('/accueil', name: 'accueil')]
     public function index(Request $request): Response
     {
+        // Vérification si un fichier a été envoyé
         if ($request->isMethod('POST') && $request->files->has('file')) {
             // Récupérer le fichier
             $file = $request->files->get('file');
             $filePath = $file->getPathname();
+            $fileExtension = strtolower($file->getClientOriginalExtension());
+
+            // Vérifier si l'extension est CSV ou Excel (XLS, XLSX)
+            $validExtensions = ['csv', 'xls', 'xlsx'];
+
+            if (!in_array($fileExtension, $validExtensions)) {
+                // Si l'extension n'est pas valide, ajouter un message d'erreur à la session
+                $this->addFlash('error', 'Veuillez choisir un fichier CSV ou Excel (XLS, XLSX).');
+                return $this->redirectToRoute('accueil');
+            }
 
             // Charger le fichier avec PhpSpreadsheet
             $spreadsheet = IOFactory::load($filePath);

@@ -8,12 +8,23 @@
     .form-container label, .form-container button { display: block; margin: 10px 0; }
     .form-container button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
     .form-container button:hover { background-color: #45a049; }
+
+    .error-message {
+        color: red;
+        font-weight: bold;
+    }
 </style>
 
 <div class="form-container">
     <h1>Bienvenue sur la page d'accueil</h1>
     
     <p>Sur cette page, vous pouvez importer un fichier CSV ou Excel pour l'afficher sur la page suivante.</p>
+
+    {% for message in app.flashes('error') %}
+        <div class="error-message">
+            {{ message }}
+        </div>
+    {% endfor %}
 
     <form action="{{ path('accueil') }}" method="post" enctype="multipart/form-data">
         <label for="file">Choisir un fichier (CSV, XLS, XLSX) :</label>
